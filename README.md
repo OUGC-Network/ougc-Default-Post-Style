@@ -4,7 +4,7 @@
     </a>
 </p>
 
-<h3 align="center">OUGC Default Post Style</h3>
+<h3 align="center">OUGC Default Post Style (Templates)</h3>
 
 <div align="center">
 
