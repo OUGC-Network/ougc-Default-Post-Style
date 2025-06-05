@@ -66,6 +66,10 @@ if (defined('IN_ADMINCP')) {
     addHooks('ougc\DefaultPostStyle\Hooks\Forum');
 }
 
+require_once ROOT . '/hooks/shared.php';
+
+addHooks('ougc\DefaultPostStyle\Hooks\Shared');
+
 defined('PLUGINLIBRARY') || define('PLUGINLIBRARY', constant('MYBB_ROOT') . 'inc/plugins/pluginlibrary.php');
 
 function ougc_defaultpoststyle_info(): array

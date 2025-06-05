@@ -32,9 +32,6 @@ namespace ougc\DefaultPostStyle\Hooks\Forum;
 
 use MyBB;
 
-use PostDataHandler;
-use UserDataHandler;
-
 use function ougc\DefaultPostStyle\Core\deleteUserTemplate;
 use function ougc\DefaultPostStyle\Core\getSetting;
 use function ougc\DefaultPostStyle\Core\getUserTemplate;
@@ -466,74 +463,6 @@ function usercp_start(bool $isModeratorPanel = false)
 function modcp_start()
 {
     usercp_start(true);
-}
-
-function datahandler_post_validate_thread(PostDataHandler $postDataHandler): PostDataHandler
-{
-    return datahandler_post_validate_post($postDataHandler);
-}
-
-function datahandler_post_validate_post(PostDataHandler $postDataHandler): PostDataHandler
-{
-    global $mybb;
-    global $ougcDefaultPostStyleSelectedTemplateID;
-
-    $forumID = (int)$postDataHandler->data['fid'];
-
-    if (isIgnoredForum($forumID) || !is_member(
-            getSetting('groups'),
-            get_user($postDataHandler->data['uid'])
-        )) {
-        return $postDataHandler;
-    }
-
-    if (!isset($mybb->input['ougcDefaultPostStyleTemplateID'])) {
-        return $postDataHandler;
-    }
-
-    $selectedTemplateID = $ougcDefaultPostStyleSelectedTemplateID = $mybb->get_input(
-        'ougcDefaultPostStyleTemplateID',
-        MyBB::INPUT_INT
-    );
-
-    $userID = (int)$postDataHandler->data['uid'];
-
-    $templateData = getUserTemplate($selectedTemplateID, $userID);
-
-    if (!$userID || empty($templateData['isEnabled'])) {
-        return $postDataHandler;
-    }
-
-    $ougcDefaultPostStyleSelectedTemplateID = (int)$templateData['templateID'];
-
-    return $postDataHandler;
-}
-
-function datahandler_post_insert_thread_post(PostDataHandler $postDataHandler): PostDataHandler
-{
-    return datahandler_post_insert_post($postDataHandler);
-}
-
-function datahandler_post_insert_post(PostDataHandler $postDataHandler): PostDataHandler
-{
-    global $ougcDefaultPostStyleSelectedTemplateID;
-
-    if (isset($ougcDefaultPostStyleSelectedTemplateID)) {
-        if (isset($postDataHandler->post_update_data)) {
-            $postDataHandler->post_update_data['ougcDefaultPostStyleTemplateID'] = (int)$ougcDefaultPostStyleSelectedTemplateID;
-        }
-
-        if (isset($postDataHandler->post_insert_data)) {
-            $postDataHandler->post_insert_data['ougcDefaultPostStyleTemplateID'] = (int)$ougcDefaultPostStyleSelectedTemplateID;
-        }
-    }
-
-    return $postDataHandler;
-}
-
-function datahandler_post_update(PostDataHandler $postDataHandler): PostDataHandler
-{
-    return datahandler_post_insert_post($postDataHandler);
 }
 
 function postbit_prev(array $postData): array
