@@ -116,6 +116,10 @@ function usercp_start(bool $isModeratorPanel = false)
 
     $pageAction = getSetting('pageAction');
 
+	if ($mybb->get_input('action') !== $pageAction) {
+		return false;
+	}
+
     if ($isModeratorPanel) {
         if (!is_member(getSetting('moderatorGroups'))) {
             return false;
@@ -138,10 +142,6 @@ function usercp_start(bool $isModeratorPanel = false)
         $navigationItem = eval(getTemplate('moderatorNav'));
 
         $modcp_nav = str_replace('<!--OUGC_DEFAULTPOSTSTYLE-->', $navigationItem, $modcp_nav);
-    }
-
-    if ($mybb->get_input('action') !== $pageAction) {
-        return false;
     }
 
     global $plugins, $lang, $headerinclude, $header, $footer, $usercpnav, $theme;
